@@ -7,11 +7,16 @@ from geojson import Feature, FeatureCollection
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-f', '--file_path', required=True, default=None,
+        'file_path',
         type=str,
         help='filepath to convert')
+    parser.add_argument(
+        'output_file', default='output',
+        type=str,
+        help='file to output to')
     args = parser.parse_args()
     file_path = args.file_path
+    output_file = args.output_file
     features = []
     csv_features = pd.read_csv(file_path)
     for _i, feature in csv_features.iterrows():
@@ -20,5 +25,5 @@ if __name__ == '__main__':
         features.append(
             Feature(geometry=geometry, properties=feature.dropna().to_dict()))
     collection = FeatureCollection(features)
-    with open('output.json', 'w') as f:
+    with open(f'{output_file}.json', 'w') as f:
         f.write('%s' % collection)
